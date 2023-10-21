@@ -6,3 +6,6 @@ export class Ordenes {
     estado: string = 'No Entregado';
     direccion: string;
 }
+
+
+// prueba
