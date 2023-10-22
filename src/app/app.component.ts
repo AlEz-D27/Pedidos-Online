@@ -13,8 +13,7 @@ export class AppComponent implements OnInit {
   confirmarPedidoBtn: any;
   listarCombos: any;
   articulosCarrito: any[] = [];
-  producto : Producto = new Producto();
-  productos: Producto[] = [];
+
   ngOnInit() {
     this.carrito = document.querySelector('#carrito');
     this.contenedorCarrito = document.querySelector('#lista-carrito tbody');
