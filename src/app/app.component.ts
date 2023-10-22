@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Producto } from './producto';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ export class AppComponent implements OnInit {
   confirmarPedidoBtn: any;
   listarCombos: any;
   articulosCarrito: any[] = [];
-
+  producto : Producto = new Producto();
+  productos: Producto[] = [];
   ngOnInit() {
     this.carrito = document.querySelector('#carrito');
     this.contenedorCarrito = document.querySelector('#lista-carrito tbody');
@@ -22,7 +24,20 @@ export class AppComponent implements OnInit {
   
     this.cargarEventListeners();
   }
-  
+  /*
+    Aqui creamos la funcion onSubmit
+  */
+    onFileSelected(event: any) {
+      const file: File = event.target.files[0];
+      this.producto.imagenProducto = file;
+    }
+  onSubmit(){
+    this.guardarProductos();
+  }
+  guardarProductos(){
+    //Ahora mismo todo se guarda de forma local, nada mas para testear
+    this.productos.push(this.producto);
+  }
   cargarEventListeners() {
     if (this.listarCombos) {
       this.listarCombos.addEventListener('click', this.agregarCombos.bind(this));

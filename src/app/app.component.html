@@ -42,6 +42,24 @@
     <h1 id="encabezado" class="encabezado">Pedidos en Línea</h1>
     <div class="row">
         <div class="four columns">
+            <form class="container" (ngSubmit)="onSubmit()">
+                <div class="card">
+                    <img src="..." class="img-thumbnail" alt="...">
+                    <input class="form-control" type="file" id="imagen" name="imagen" required="true" (change)="onFileSelected($event)" required>
+                    <div class="info-card">
+                        <h4>Ingresar nombre:</h4>
+                        <input type="text" name="nombreProducto" id="nombreProducto" required="true" [(ngModel)]="producto.nombreProducto">
+                        
+                        <h6>Introducir precio:</h6>
+                        <input type="number" name="precio" id="precio " step="1000" required="true" [(ngModel)]="producto.precioProducto">
+                        <button type="submit" class="u-full-width button-primary button">Añadir Producto</button>
+                    </div>
+                </div> <!--.card-->
+            </form>
+            
+        </div>
+        <div class="four columns">
+            
             <div class="card">
                 <img src="assets/img/combo01.png" class="imagen-combo u-full-width">
                 <div class="info-card">
@@ -53,108 +71,7 @@
                 </div>
             </div> <!--.card-->
         </div>
-        <div class="four columns">
-                <div class="card">
-                    <img src="assets/img/combo02.png" class="imagen-combo u-full-width">
-                    <div class="info-card">
-                        <h4>Hamburguesa con Queso</h4><br>
-                        <!-- <p>Juan Pedro</p>
-                        <img src="assets/img/estrellas.png"> -->
-                        <p class="precio">17000 Gs <span class="u-pull-right ">13000 Gs</span></p>
-                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="2">Agregar Al Carrito</a>
-                    </div>
-                </div>
-        </div>
-        <div class="four columns">
-                <div class="card">
-                    <img src="assets/img/combo03.png" class="imagen-combo u-full-width">
-                    <div class="info-card">
-                        <h4>Doble Cuarto de Libra</h4><br>
-                        <!-- <p>Juan Pedro</p>
-                        <img src="assets/img/estrellas.png"> -->
-                        <p class="precio">24500 Gs <span class="u-pull-right ">20000 Gs</span></p>
-                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="3">Agregar Al Carrito</a>
-                    </div>
-                </div> <!--.card-->
-        </div>
-
-    </div> <!--.row-->
-    <div class="row">
-        <div class="four columns">
-            <div class="card">
-                <img src="assets/img/combo04.png" class="imagen-combo u-full-width">
-                <div class="info-card">
-                    <h4>Sandwich de Pollo</h4><br>
-                    <!-- <p>Juan Pedro</p>
-                    <img src="assets/img/estrellas.png"> -->
-                    <p class="precio">14000 Gs <span class="u-pull-right ">12000 Gs</span></p>
-                    <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="4">Agregar Al Carrito</a>
-                </div>
-            </div> <!--.card-->
-        </div>
-        <div class="four columns">
-                <div class="card">
-                    <img src="assets/img/combo05.jpeg" class="imagen-combo u-full-width">
-                    <div class="info-card">
-                        <h4>Borde Relleno Familiar</h4><br>
-                        <!-- <p>Juan Pedro</p>
-                        <img src="assets/img/estrellas.png"> -->
-                        <p class="precio">75000 Gs  <span class="u-pull-right ">60000 Gs</span></p>
-                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="5">Agregar Al Carrito</a>
-                    </div>
-                </div> <!--.card-->
-        </div>
-        <div class="four columns">
-                <div class="card">
-                    <img src="assets/img/combo06.png" class="imagen-combo u-full-width">
-                    <div class="info-card">
-                        <h4>Coca Cola de 3L</h4><br>
-                        <!-- <p>Juan Pedro</p>
-                        <img src="assets/img/estrellas.png"> -->
-                        <p class="precio">16000 Gs <span class="u-pull-right ">14000 Gs</span></p>
-                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="6">Agregar Al Carrito</a>
-                    </div>
-                </div> <!--.card-->
-        </div>
-    </div> <!--.row-->
-    <div class="row">
-        <div class="four columns">
-            <div class="card">
-                <img src="assets/img/combo07.png" class="imagen-combo u-full-width">
-                <div class="info-card">
-                    <h4>Sprite de 3L</h4><br>
-                    <!-- <p>Juan Pedro</p>
-                    <img src="assets/img/estrellas.png"> -->
-                    <p class="precio">16000 Gs <span class="u-pull-right ">14000 Gs</span></p>
-                    <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="7">Agregar Al Carrito</a>
-                </div>
-            </div> <!--.card-->
-        </div>
-        <div class="four columns">
-                <div class="card">
-                    <img src="assets/img/combo08.png" class="imagen-combo u-full-width">
-                    <div class="info-card">
-                        <h4>Cono de Vainilla y Dulce de Leche</h4><br>
-                        <!-- <p>Juan Pedro</p>
-                        <img src="assets/img/estrellas.png"> -->
-                        <p class="precio">5500 Gs <span class="u-pull-right ">4000 Gs</span></p>
-                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="8">Agregar Al Carrito</a>
-                    </div>
-                </div> <!--.card-->
-        </div>
-        <div class="four columns">
-                <div class="card">
-                    <img src="assets/img/combo09.png" class="imagen-combo u-full-width">
-                    <div class="info-card">
-                        <h4>Sundae de Chocolate</h4><br>
-                        <!-- <p>Juan Pedro</p>
-                        <img src="assets/img/estrellas.png"> -->
-                        <p class="precio">8000 Gs<span class="u-pull-right ">6500</span></p>
-                        <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="9">Agregar Al Carrito</a>
-                    </div>
-                </div> <!--.card-->
-        </div>
-    </div> <!--.row-->
+        
     <!-- <div class="row">
             <div class="four columns">
                 <div class="card">
