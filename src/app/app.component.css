@@ -15,7 +15,7 @@ h4 {
     font-weight: 700;
 }
 header {
-    padding: 20px 0 0 0;
+    padding: 20px 0 0 0px;
     background: white;
     text-align: center;
 }
@@ -42,7 +42,7 @@ header {
 
 @media (min-width: 750px) {
     header {
-        text-align: left;
+        text-align: right;
     }
 }
 .borrar-combo {
@@ -65,7 +65,7 @@ ul {
 #encabezado {
     color: rgb(43, 109, 253);
     font-family: fantasy;
-    margin: 30px 0;
+    margin: 40px 0;
 }
 #vaciar-carrito {
     color: white;

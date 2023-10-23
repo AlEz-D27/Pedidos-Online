@@ -13,7 +13,9 @@ export class AppComponent implements OnInit {
   confirmarPedidoBtn: any;
   listarCombos: any;
   articulosCarrito: any[] = [];
-
+  productos: Producto[] = [];
+  producto: Producto = new Producto();
+  contador: number = 0;
   ngOnInit() {
     this.carrito = document.querySelector('#carrito');
     this.contenedorCarrito = document.querySelector('#lista-carrito tbody');
@@ -26,16 +28,28 @@ export class AppComponent implements OnInit {
   /*
     Aqui creamos la funcion onSubmit
   */
-    onFileSelected(event: any) {
-      const file: File = event.target.files[0];
-      this.producto.imagenProducto = file;
-    }
+   
   onSubmit(){
+    /* if (this.producto.imagenProducto) {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        this.producto.imagenProducto = event.target.result;
+      };
+      reader.readAsDataURL(this.producto.imagenProducto);
+    } */
     this.guardarProductos();
   }
   guardarProductos(){
     //Ahora mismo todo se guarda de forma local, nada mas para testear
-    this.productos.push(this.producto);
+    this.contador++;
+    this.producto.idProducto = this.contador;
+    const nuevoProducto = {...this.producto};
+    console.log(nuevoProducto.idProducto);
+    this.productos.push(nuevoProducto);
+    
+  }
+  imagenURL(): string{
+      return URL.createObjectURL(this.producto.imagenProducto);
   }
   cargarEventListeners() {
     if (this.listarCombos) {
@@ -67,7 +81,7 @@ export class AppComponent implements OnInit {
   
   agregarCombos(e: Event) {
     e.preventDefault();
-  
+    console.log("Se cargo correctamente");
     if ((e.target as HTMLElement).classList.contains('agregar-carrito')) {
       const comboSeleccionado = (e.target as HTMLElement).parentElement?.parentElement;
       if (comboSeleccionado) {
@@ -185,17 +199,22 @@ export class AppComponent implements OnInit {
   
   leerDatosCombo(combo: any) {
     if (combo) {
+      //Borrar esto luegp
+      const idContador = this.contador++;
+      const idNormal = combo.querySelector('a')?.getAttribute('data-id');
       const infoCombo = {
         imagen: combo.querySelector('img')?.src,
         titulo: combo.querySelector('h4')?.textContent,
         precio: combo.querySelector('.precio span')?.textContent,
-        id: combo.querySelector('a')?.getAttribute('data-id'),
+        id: idNormal || idContador,
         cantidad: 1
       };
-  
+      console.log(infoCombo.titulo, infoCombo.id, infoCombo.precio);
       if (infoCombo.imagen && infoCombo.titulo && infoCombo.precio && infoCombo.id) {
         const existe = this.articulosCarrito.some((combo) => combo.id === infoCombo.id);
+        console.log("Info casi todo es true");
         if (existe) {
+          console.log("existe es true");
           const combos = this.articulosCarrito.map((combo) => {
             if (combo.id === infoCombo.id) {
               combo.cantidad++;
