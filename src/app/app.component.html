@@ -46,7 +46,7 @@
                 <div class="card">
                     <form  class="container" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
                        
-                        <input class="form-control" type="file" style="margin-top: 20px; margin-bottom: -10px;" id="imagenProducto" name="imagenProducto" required="true" [(ngModel)]="producto.imagenProducto">
+                        <input class="form-control" type="file" style="margin-top: 20px; margin-bottom: -10px;" id="imagenProducto" name="imagenProducto" required="true" (change)="fileSeleccionada($event)" required/>
                         <div class="info-card">
                             <h4>Ingresar nombre:</h4>
                             <input type="text" name="nombreProducto" id="nombreProducto" required="true" [(ngModel)]="producto.nombreProducto">
@@ -81,8 +81,12 @@
                 </div>
                 <div  *ngFor="let producto of productos" class="four columns">
                     
-                    <div class="card">
-                        <img src="assets/img/combo01.png" class="imagen-combo u-full-width">
+                    <div  class="card">
+                        <div   >
+                            
+                            <img [src]="imagenUrl" class="imagen-combo u-full-width">
+                        </div>
+                        
                         <div class="info-card">
                             <h4>{{producto.nombreProducto}}</h4><br>
                             

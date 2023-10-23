@@ -1,12 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { Producto } from './producto';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css', './app.normalize.css', './app.skeleton.css']
 })
+
 export class AppComponent implements OnInit {
+  
+  constructor(public sanitizer: DomSanitizer) {}
+
+  imagenUrl: SafeResourceUrl | null;
+  
   carrito: any;
   contenedorCarrito: any;
   vaciarCarritoBtn: any;
@@ -16,6 +24,8 @@ export class AppComponent implements OnInit {
   productos: Producto[] = [];
   producto: Producto = new Producto();
   contador: number = 0;
+  imagenes: SafeResourceUrl[] = [];
+
   ngOnInit() {
     this.carrito = document.querySelector('#carrito');
     this.contenedorCarrito = document.querySelector('#lista-carrito tbody');
@@ -43,14 +53,34 @@ export class AppComponent implements OnInit {
     //Ahora mismo todo se guarda de forma local, nada mas para testear
     this.contador++;
     this.producto.idProducto = this.contador;
+    
     const nuevoProducto = {...this.producto};
     console.log(nuevoProducto.idProducto);
     this.productos.push(nuevoProducto);
-    
+    console.log("primero se ejecuto guardarProducto")
   }
-  imagenURL(): string{
-      return URL.createObjectURL(this.producto.imagenProducto);
+  fileSeleccionada(event:any){
+    const files = event.target.files;
+    console.log("primero se ejecuto fileSeleccionada");
+    if (files && files.length > 0){
+      const file = files[0];
+      console.log("Existe un file ", file);
+      
+      this.imagenUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file));
+      
+      console.log("el imagen URL: ", this.imagenUrl);
+      console.log("el objeto producto.imagenProducto: ", this.producto.imagenProducto);
+      this.imagenes.push(this.imagenUrl);
+      const reader = new FileReader();
+      reader.onload = (e) =>{
+        this.producto.imagenProducto = file;
+        console.log("producto.imagenProducto: ",this.producto.imagenProducto )
+      };
+      reader.readAsDataURL(file);
+      return file;
+    }
   }
+  
   cargarEventListeners() {
     if (this.listarCombos) {
       this.listarCombos.addEventListener('click', this.agregarCombos.bind(this));
