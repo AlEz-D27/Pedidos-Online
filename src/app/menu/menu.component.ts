@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Ordenes } from './ordenes';
+import { Producto } from 'src/app/producto';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-menu',
@@ -7,14 +8,22 @@ import { Ordenes } from './ordenes';
   styleUrls: ['./menu.component.css', './menu.normalize.css', './menu.skeleton.css']
 })
 export class MenuComponent implements OnInit {
+  
+  constructor(public sanitizer: DomSanitizer) {}
 
+  imagenUrl: SafeResourceUrl | null;
+  
   carrito: any;
   contenedorCarrito: any;
   vaciarCarritoBtn: any;
   confirmarPedidoBtn: any;
   listarCombos: any;
   articulosCarrito: any[] = [];
-  ordenes : Ordenes = new Ordenes();
+  productos: Producto[] = [];
+  producto: Producto = new Producto();
+  contador: number = 0;
+  imagenes: SafeResourceUrl[] = [];
+
   ngOnInit() {
     this.carrito = document.querySelector('#carrito');
     this.contenedorCarrito = document.querySelector('#lista-carrito tbody');
@@ -23,6 +32,51 @@ export class MenuComponent implements OnInit {
     this.confirmarPedidoBtn = document.querySelector('#confirmar-pedido');
   
     this.cargarEventListeners();
+  }
+  /*
+    Aqui creamos la funcion onSubmit
+  */
+   
+  onSubmit(){
+    /* if (this.producto.imagenProducto) {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        this.producto.imagenProducto = event.target.result;
+      };
+      reader.readAsDataURL(this.producto.imagenProducto);
+    } */
+    this.guardarProductos();
+  }
+  guardarProductos(){
+    //Ahora mismo todo se guarda de forma local, nada mas para testear
+    this.contador++;
+    this.producto.idProducto = this.contador;
+    
+    const nuevoProducto = {...this.producto};
+    console.log(nuevoProducto.idProducto);
+    this.productos.push(nuevoProducto);
+    console.log("primero se ejecuto guardarProducto")
+  }
+  fileSeleccionada(event:any){
+    const files = event.target.files;
+    console.log("primero se ejecuto fileSeleccionada");
+    if (files && files.length > 0){
+      const file = files[0];
+      console.log("Existe un file ", file);
+      
+      this.imagenUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file));
+      
+      console.log("el imagen URL: ", this.imagenUrl);
+      console.log("el objeto producto.imagenProducto: ", this.producto.imagenProducto);
+      this.imagenes.push(this.imagenUrl);
+      const reader = new FileReader();
+      reader.onload = (e) =>{
+        this.producto.imagenProducto = file;
+        console.log("producto.imagenProducto: ",this.producto.imagenProducto )
+      };
+      reader.readAsDataURL(file);
+      return file;
+    }
   }
   
   cargarEventListeners() {
@@ -55,7 +109,7 @@ export class MenuComponent implements OnInit {
   
   agregarCombos(e: Event) {
     e.preventDefault();
-  
+    console.log("Se cargo correctamente");
     if ((e.target as HTMLElement).classList.contains('agregar-carrito')) {
       const comboSeleccionado = (e.target as HTMLElement).parentElement?.parentElement;
       if (comboSeleccionado) {
@@ -173,17 +227,22 @@ export class MenuComponent implements OnInit {
   
   leerDatosCombo(combo: any) {
     if (combo) {
+      //Borrar esto luegp
+      const idContador = this.contador++;
+      const idNormal = combo.querySelector('a')?.getAttribute('data-id');
       const infoCombo = {
         imagen: combo.querySelector('img')?.src,
         titulo: combo.querySelector('h4')?.textContent,
         precio: combo.querySelector('.precio span')?.textContent,
-        id: combo.querySelector('a')?.getAttribute('data-id'),
+        id: idNormal || idContador,
         cantidad: 1
       };
-  
+      console.log(infoCombo.titulo, infoCombo.id, infoCombo.precio);
       if (infoCombo.imagen && infoCombo.titulo && infoCombo.precio && infoCombo.id) {
         const existe = this.articulosCarrito.some((combo) => combo.id === infoCombo.id);
+        console.log("Info casi todo es true");
         if (existe) {
+          console.log("existe es true");
           const combos = this.articulosCarrito.map((combo) => {
             if (combo.id === infoCombo.id) {
               combo.cantidad++;
@@ -281,6 +340,6 @@ export class MenuComponent implements OnInit {
       this.contenedorCarrito.removeChild(this.contenedorCarrito.firstChild);
     }
   }
-}
+  }
   
   
