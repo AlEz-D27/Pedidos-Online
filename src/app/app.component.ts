@@ -3,6 +3,7 @@ import { Producto } from './producto';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -24,15 +25,14 @@ export class AppComponent implements OnInit {
   productos: Producto[] = [];
   producto: Producto = new Producto();
   contador: number = 0;
-  imagenes: SafeResourceUrl[] = [];
-
+  cargarProducto: any;
   ngOnInit() {
     this.carrito = document.querySelector('#carrito');
     this.contenedorCarrito = document.querySelector('#lista-carrito tbody');
     this.vaciarCarritoBtn = document.querySelector('#vaciar-carrito');
     this.listarCombos = document.querySelector('#lista-combos');
     this.confirmarPedidoBtn = document.querySelector('#confirmar-pedido');
-  
+    this.cargarProducto = document.querySelector("#cargar-productos")
     this.cargarEventListeners();
   }
   /*
@@ -58,6 +58,7 @@ export class AppComponent implements OnInit {
     console.log(nuevoProducto.idProducto);
     this.productos.push(nuevoProducto);
     console.log("primero se ejecuto guardarProducto")
+    this.cargarProductosFuncion();
   }
   fileSeleccionada(event:any){
     const files = event.target.files;
@@ -70,17 +71,40 @@ export class AppComponent implements OnInit {
       
       console.log("el imagen URL: ", this.imagenUrl);
       console.log("el objeto producto.imagenProducto: ", this.producto.imagenProducto);
-      this.imagenes.push(this.imagenUrl);
+      
       const reader = new FileReader();
       reader.onload = (e) =>{
-        this.producto.imagenProducto = file;
+        
         console.log("producto.imagenProducto: ",this.producto.imagenProducto )
       };
       reader.readAsDataURL(file);
       return file;
     }
   }
-  
+  cargarProductosFuncion(){
+    // Referencia al elemento donde se mostrarán los productos
+  const productosContainer = document.getElementById('lista-combos');
+    if (productosContainer){
+      this.productos.forEach((producto, index) => {
+        // Crear un nuevo div para cada producto
+        const productDiv = document.createElement('div');
+        productDiv.innerHTML = `
+          <img src="${this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(producto.imagenProducto))}" class="imagen-combo u-full-width">
+          <div class="info-card">
+            <h4>${producto.nombreProducto}</h4><br>
+            <p class="precio">20000 Gs  <span class="u-pull-right">${producto.precioProducto}</span></p>
+            <a href="#" class="u-full-width button-primary button input agregar-carrito" 
+              data-id="${producto.idProducto}">Agregar Al Carrito</a>
+          </div>
+        `;
+    
+        // Agregar el div del producto al contenedor principal
+        productosContainer.appendChild(productDiv);
+      });
+    }else{
+      console.log("COntenio nulo");
+    }         
+  }
   cargarEventListeners() {
     if (this.listarCombos) {
       this.listarCombos.addEventListener('click', this.agregarCombos.bind(this));

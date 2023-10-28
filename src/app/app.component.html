@@ -65,7 +65,7 @@
             <div class="row">
                 <div   class="four columns">
                     
-                    <div class="card">
+                    <div  class="card">
                         <img src="assets/img/combo01.png" class="imagen-combo u-full-width">
                         <div class="info-card">
                             <h4>Cuarto de Libra</h4><br>
@@ -81,11 +81,9 @@
                 </div>
                 <div  *ngFor="let producto of productos" class="four columns">
                     
-                    <div  class="card">
-                        <div   >
-                            
-                            <img [src]="imagenUrl" class="imagen-combo u-full-width">
-                        </div>
+                    <div id="cargar-productos" class="card">
+                        <img [src]="imagenUrl" class="imagen-combo u-full-width">
+                       
                         
                         <div class="info-card">
                             <h4>{{producto.nombreProducto}}</h4><br>
