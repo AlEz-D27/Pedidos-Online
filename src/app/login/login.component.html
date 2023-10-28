@@ -1,0 +1,53 @@
+<div class="container" [ngClass]="{'right-panel-active': isRightPanelActive}">
+  <div class="form-container sign-up-container">
+		<form (ngSubmit)="onSubmit()">
+			<h1>Crear una Cuenta</h1><br>
+			<span>Ingresa tus datos personales para registrarte</span>
+			<input type="text" placeholder="Nombre" [(ngModel)]="nombre" name="nombre" />
+			<input type="text" placeholder="Apellido" [(ngModel)]="apellido" name="apellido" />
+			<input type="text" placeholder="Edad" [(ngModel)]="edad" name="edad" />
+      <!-- <span>Rol:</span> -->
+        <select [(ngModel)]="rol" id="Rol">
+          <option>Seleccione rol</option>
+          <option>Cliente</option>
+          <option>Administrador</option>
+        </select>
+			<input type="email" placeholder="Email" [(ngModel)]="email" name="email" />
+      <input type="password" placeholder="Password" [(ngModel)]="password" name="password" />
+			<button type="submit">Registrarse</button>
+		</form>
+	</div>
+  <div class="form-container sign-in-container">
+      <form (ngSubmit)="onSubmit()">
+          <h1>Iniciar Sesión</h1><br>
+          <span>Ingresa tus datos</span>
+          <input type="email" placeholder="Email" [(ngModel)]="email" name="email" />
+          <input type="password" placeholder="Password" [(ngModel)]="password" name="password" />
+          <!-- <a href="#">Forgot your password?</a> -->
+          <button type="submit">Iniciar Sesión</button>
+      </form>
+  </div>
+  <div class="overlay-container">
+      <div class="overlay">
+          <div class="overlay-panel overlay-left">
+              <h1>Bienvenido de vuelta</h1>
+              <p>Para mantenerse conectado con nosotros, inicie sesión con su información personal</p>
+              <button class="ghost" id="signIn" (click)="onSignInClick()">Iniciar Sesión</button>
+          </div>
+          <div class="overlay-panel overlay-right">
+              <h1>Bienvenido!</h1>
+              <p>Introduce tus datos personales y comienza el viaje con nosotros</p>
+              <button class="ghost" id="signUp" (click)="onSignUpClick()">Registrarse</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- <footer>
+  <p>
+      Created with <i class="fa fa-heart"></i> by
+      <a target="_blank" href="https://florin-pop.com">Florin Pop</a>
+      - Read how I created this and how you can join the challenge
+      <a target="_blank" href="https://www.florin-pop.com/blog/2019/03/double-slider-sign-in-up-form/">here</a>.
+  </p>
+</footer> -->
