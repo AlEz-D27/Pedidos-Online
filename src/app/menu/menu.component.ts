@@ -55,37 +55,27 @@ export class MenuComponent implements OnInit {
     const nuevoProducto = {...this.producto};
     console.log(nuevoProducto.idProducto);
     this.productos.push(nuevoProducto);
-    console.log("primero se ejecuto guardarProducto")
+    console.log("primero se ejecuto guardarProducto");
+    this.producto = new Producto();
   }
-  fileSeleccionada(event:any){
-    const files = event.target.files;
-    console.log("primero se ejecuto fileSeleccionada");
-    if (files && files.length > 0){
-      const file = files[0];
-      console.log("Existe un file ", file);
-      
-      this.imagenUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file));
-      
-      console.log("el imagen URL: ", this.imagenUrl);
-      console.log("el objeto producto.imagenProducto: ", this.producto.imagenProducto);
-      this.imagenes.push(this.imagenUrl);
-      const reader = new FileReader();
-      reader.onload = (e) =>{
-        this.producto.imagenProducto = file;
-        console.log("producto.imagenProducto: ",this.producto.imagenProducto )
-      };
-      reader.readAsDataURL(file);
-      return file;
-    }
+  fileSeleccionada(event: any, producto: Producto) {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+          const file = files[0];
+          producto.imagenProducto = file;
+          producto.imagenUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file));
+      }
   }
-  
+
   cargarEventListeners() {
     if (this.listarCombos) {
       this.listarCombos.addEventListener('click', this.agregarCombos.bind(this));
     }
   
     if (this.carrito) {
-      this.carrito.addEventListener('click', this.eliminarCombo.bind(this));
+      this.carrito.addEventListener('click', (e: Event) => {
+        this.eliminarCombo(e);
+      });
     }
   
     document.addEventListener('DOMContentLoaded', () => {
@@ -216,10 +206,11 @@ export class MenuComponent implements OnInit {
   
   
   eliminarCombo(e: Event) {
+    e.preventDefault();
     if ((e.target as HTMLElement).classList.contains('borrar-combo')) {
       const comboId = (e.target as HTMLElement).getAttribute('data-id');
       if (comboId) {
-        this.articulosCarrito = this.articulosCarrito.filter((combo) => combo.id !== comboId);
+        this.articulosCarrito = this.articulosCarrito.filter((combo) => combo.id !== parseInt(comboId));
         this.carritoHTML();
       }
     }
@@ -227,39 +218,41 @@ export class MenuComponent implements OnInit {
   
   leerDatosCombo(combo: any) {
     if (combo) {
-      //Borrar esto luegp
-      const idContador = this.contador++;
-      const idNormal = combo.querySelector('a')?.getAttribute('data-id');
-      const infoCombo = {
-        imagen: combo.querySelector('img')?.src,
-        titulo: combo.querySelector('h4')?.textContent,
-        precio: combo.querySelector('.precio span')?.textContent,
-        id: idNormal || idContador,
-        cantidad: 1
-      };
-      console.log(infoCombo.titulo, infoCombo.id, infoCombo.precio);
-      if (infoCombo.imagen && infoCombo.titulo && infoCombo.precio && infoCombo.id) {
-        const existe = this.articulosCarrito.some((combo) => combo.id === infoCombo.id);
-        console.log("Info casi todo es true");
-        if (existe) {
-          console.log("existe es true");
-          const combos = this.articulosCarrito.map((combo) => {
-            if (combo.id === infoCombo.id) {
-              combo.cantidad++;
-              return combo;
+        const agregarCarritoElement = combo.querySelector('.agregar-carrito');
+        console.log("agregarCarritoElement:", agregarCarritoElement);
+
+        if (agregarCarritoElement) {
+            const idNormal = parseInt(agregarCarritoElement.getAttribute('id') || "");
+            console.log("idNormal:", idNormal);
+
+            const precioElement = combo.querySelector('.precio span');
+            const precio = precioElement ? precioElement.textContent : '';
+
+            const existingProduct = this.articulosCarrito.find((product) => product.id === idNormal);
+            console.log("existingProduct:", existingProduct);
+
+            if (existingProduct) {
+                existingProduct.cantidad++;
             } else {
-              return combo;
+                const infoCombo = {
+                    imagen: combo.querySelector('img')?.src,
+                    titulo: combo.querySelector('h4')?.textContent,
+                    precio: precio,
+                    id: idNormal,
+                    cantidad: 1
+                };
+                this.articulosCarrito.push(infoCombo);
             }
-          });
-          this.articulosCarrito = [...combos];
+
+            this.carritoHTML();
         } else {
-          this.articulosCarrito = [...this.articulosCarrito, infoCombo];
+            console.error("Agregar carrito element not found.");
         }
-  
-        this.carritoHTML();
-      }
+    } else {
+        console.error("Combo element not found.");
     }
-  }
+}
+
   
   // carritoHTML() {
   //   this.limpiarHTML();
