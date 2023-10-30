@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Ordenes } from './ordenes';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -7,7 +8,7 @@ import { Ordenes } from './ordenes';
   styleUrls: ['./menu.component.css', './menu.normalize.css', './menu.skeleton.css']
 })
 export class MenuComponent implements OnInit {
-
+  constructor(private router: Router) {}
   carrito: any;
   contenedorCarrito: any;
   vaciarCarritoBtn: any;
@@ -24,7 +25,10 @@ export class MenuComponent implements OnInit {
   
     this.cargarEventListeners();
   }
-  
+  agregarProductos(){
+    this.router.navigate(["/add-producto"])
+    console.log("click");
+  }
   cargarEventListeners() {
     if (this.listarCombos) {
       this.listarCombos.addEventListener('click', this.agregarCombos.bind(this));

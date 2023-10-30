@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./agregar-productos.component.css']
 })
 export class AgregarProductosComponent {
-
+  ngOnInit(){
+    console.log("Estas en agregar productos")
+  }
 }
