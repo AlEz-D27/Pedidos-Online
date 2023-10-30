@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Ordenes } from './ordenes';
-import { Router } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Producto } from 'src/app/producto';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ProductoService } from '../producto.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-menu',
@@ -8,14 +10,26 @@ import { Router } from '@angular/router';
   styleUrls: ['./menu.component.css', './menu.normalize.css', './menu.skeleton.css']
 })
 export class MenuComponent implements OnInit {
-  constructor(private router: Router) {}
+  
+  constructor(
+    public sanitizer: DomSanitizer,
+    public productoServicio: ProductoService) {}
+
+  imagenUrl: SafeResourceUrl | null;
+  
   carrito: any;
   contenedorCarrito: any;
   vaciarCarritoBtn: any;
   confirmarPedidoBtn: any;
   listarCombos: any;
   articulosCarrito: any[] = [];
-  ordenes : Ordenes = new Ordenes();
+  productos: Producto[] = [];
+  producto: Producto = new Producto();
+  contador: number = 0;
+  imagenes: SafeResourceUrl[] = [];
+  file : any;
+  url ?: string;
+  @ViewChild('miFormulario') miFormulario: NgForm;
   ngOnInit() {
     this.carrito = document.querySelector('#carrito');
     this.contenedorCarrito = document.querySelector('#lista-carrito tbody');
@@ -24,10 +38,45 @@ export class MenuComponent implements OnInit {
     this.confirmarPedidoBtn = document.querySelector('#confirmar-pedido');
   
     this.cargarEventListeners();
+    this.obtenerProductos();
   }
-  agregarProductos(){
-    this.router.navigate(["/add-producto"])
-    console.log("click");
+  /*
+    Aqui creamos la funcion onSubmit
+  */
+  
+    onSubmit(){
+      this.subir().then(() => {
+        this.obtenerProductos();
+        this.miFormulario.resetForm();
+      })
+      .catch((error) => {
+        console.error('Error al enviar el formulario: ' + error);
+      });
+    }
+    fileSeleccionada(event: any){
+      this.file = event.target.files[0];
+      
+    }
+    subir(){
+     return new Promise((resolve, reject) => {
+      const formData = new FormData;
+      formData.append('file',this.file);
+      formData.append('nombre', JSON.stringify(this.producto.nombreProducto));
+      formData.append('precio', JSON.stringify(this.producto.precioProducto));
+    console.log(this.file +" - "+ this.producto.nombreProducto +" - "+ this.producto.precioProducto);
+      this.productoServicio.upleadFile(formData).subscribe(response =>{
+        console.log('response', response);
+        this.url = response.url;
+      })
+      });
+      
+    }
+  obtenerProductos(){
+    this.productoServicio.mostrarProductos().subscribe(
+      (datos => {
+        this.productos = datos;
+      })
+    );
   }
   cargarEventListeners() {
     if (this.listarCombos) {
@@ -35,7 +84,9 @@ export class MenuComponent implements OnInit {
     }
   
     if (this.carrito) {
-      this.carrito.addEventListener('click', this.eliminarCombo.bind(this));
+      this.carrito.addEventListener('click', (e: Event) => {
+        this.eliminarCombo(e);
+      });
     }
   
     document.addEventListener('DOMContentLoaded', () => {
@@ -59,7 +110,7 @@ export class MenuComponent implements OnInit {
   
   agregarCombos(e: Event) {
     e.preventDefault();
-  
+    console.log("Se cargo correctamente");
     if ((e.target as HTMLElement).classList.contains('agregar-carrito')) {
       const comboSeleccionado = (e.target as HTMLElement).parentElement?.parentElement;
       if (comboSeleccionado) {
@@ -166,10 +217,11 @@ export class MenuComponent implements OnInit {
   
   
   eliminarCombo(e: Event) {
+    e.preventDefault();
     if ((e.target as HTMLElement).classList.contains('borrar-combo')) {
       const comboId = (e.target as HTMLElement).getAttribute('data-id');
       if (comboId) {
-        this.articulosCarrito = this.articulosCarrito.filter((combo) => combo.id !== comboId);
+        this.articulosCarrito = this.articulosCarrito.filter((combo) => combo.id !== parseInt(comboId));
         this.carritoHTML();
       }
     }
@@ -177,34 +229,41 @@ export class MenuComponent implements OnInit {
   
   leerDatosCombo(combo: any) {
     if (combo) {
-      const infoCombo = {
-        imagen: combo.querySelector('img')?.src,
-        titulo: combo.querySelector('h4')?.textContent,
-        precio: combo.querySelector('.precio span')?.textContent,
-        id: combo.querySelector('a')?.getAttribute('data-id'),
-        cantidad: 1
-      };
-  
-      if (infoCombo.imagen && infoCombo.titulo && infoCombo.precio && infoCombo.id) {
-        const existe = this.articulosCarrito.some((combo) => combo.id === infoCombo.id);
-        if (existe) {
-          const combos = this.articulosCarrito.map((combo) => {
-            if (combo.id === infoCombo.id) {
-              combo.cantidad++;
-              return combo;
+        const agregarCarritoElement = combo.querySelector('.agregar-carrito');
+        console.log("agregarCarritoElement:", agregarCarritoElement);
+
+        if (agregarCarritoElement) {
+            const idNormal = parseInt(agregarCarritoElement.getAttribute('id') || "");
+            console.log("idNormal:", idNormal);
+
+            const precioElement = combo.querySelector('.precio span');
+            const precio = precioElement ? precioElement.textContent : '';
+
+            const existingProduct = this.articulosCarrito.find((product) => product.id === idNormal);
+            console.log("existingProduct:", existingProduct);
+
+            if (existingProduct) {
+                existingProduct.cantidad++;
             } else {
-              return combo;
+                const infoCombo = {
+                    imagen: combo.querySelector('img')?.src,
+                    titulo: combo.querySelector('h4')?.textContent,
+                    precio: precio,
+                    id: idNormal,
+                    cantidad: 1
+                };
+                this.articulosCarrito.push(infoCombo);
             }
-          });
-          this.articulosCarrito = [...combos];
+
+            this.carritoHTML();
         } else {
-          this.articulosCarrito = [...this.articulosCarrito, infoCombo];
+            console.error("Agregar carrito element not found.");
         }
-  
-        this.carritoHTML();
-      }
+    } else {
+        console.error("Combo element not found.");
     }
-  }
+}
+
   
   // carritoHTML() {
   //   this.limpiarHTML();
@@ -285,6 +344,6 @@ export class MenuComponent implements OnInit {
       this.contenedorCarrito.removeChild(this.contenedorCarrito.firstChild);
     }
   }
-}
+  }
   
   

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
+import { AgregarProductosComponent } from './agregar-productos/agregar-productos.component';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -13,13 +15,15 @@ import { MenuComponent } from './menu/menu.component';
   declarations: [
     AppComponent,
     LoginComponent,
-    MenuComponent
+    MenuComponent,
+    AgregarProductosComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule, // Include the AppRoutingModule here
-    RouterModule // Include the router module
+    RouterModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

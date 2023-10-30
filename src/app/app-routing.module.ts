@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { AppComponent } from './app.component';
@@ -10,7 +11,8 @@ const routes: Routes = [
   { path: 'menu', component: MenuComponent },
   { path: '', component: LoginComponent }, // Set the root path to the LoginComponent
   { path: 'app', component: AppComponent },
-  {path:'add-producto', component: AgregarProductosComponent}
+  {path:"productos", component:AgregarProductosComponent},
+  {path:"", redirectTo:"/productos", pathMatch:"full"}
 ];
 
 @NgModule({
