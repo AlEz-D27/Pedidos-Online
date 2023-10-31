@@ -5,5 +5,5 @@ export class Producto {
     nombreProducto: string;
     precioProducto: number;
     imagenProducto: File;
-
+    imagenUrl: SafeResourceUrl | null;
 }
