@@ -16,7 +16,7 @@ import { MenuComponent } from './menu/menu.component';
     AppComponent,
     LoginComponent,
     MenuComponent,
-    AgregarProductosComponent
+    AgregarProductosComponent,
   ],
   imports: [
     BrowserModule,

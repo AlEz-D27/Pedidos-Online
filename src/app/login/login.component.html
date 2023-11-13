@@ -3,17 +3,17 @@
 		<form (ngSubmit)="onSubmit()">
 			<h1>Crear una Cuenta</h1><br>
 			<span>Ingresa tus datos personales para registrarte</span>
-			<input type="text" placeholder="Nombre" [(ngModel)]="nombre" name="nombre" />
-			<input type="text" placeholder="Apellido" [(ngModel)]="apellido" name="apellido" />
-			<input type="text" placeholder="Edad" [(ngModel)]="edad" name="edad" />
+			<input type="text" placeholder="Nombre" [(ngModel)]="registroRequest.nombre" name="nombre" />
+			<input type="text" placeholder="Apellido" [(ngModel)]="registroRequest.apellido" name="apellido" />
+			<input type="text" placeholder="Edad" [(ngModel)]="registroRequest.edad" name="edad" />
       <!-- <span>Rol:</span> -->
-      <select [(ngModel)]="rol" id="Rol" name="rol">
+      <select [(ngModel)]="registroRequest.roles" id="Rol" name="rol">
         <option>Seleccione rol</option>
         <option>Cliente</option>
         <option>Administrador</option>
       </select>
-			<input type="email" placeholder="Email" [(ngModel)]="email" name="email" />
-      <input type="password" placeholder="Password" [(ngModel)]="password" name="password" />
+			<input type="email" placeholder="Email" [(ngModel)]="registroRequest.correo" name="email" />
+      <input type="password" placeholder="Password" [(ngModel)]="registroRequest.password" name="password" />
 			<button type="submit">Registrarse</button>
 		</form>
 	</div>
@@ -21,8 +21,8 @@
       <form (ngSubmit)="onSubmit()">
           <h1>Iniciar Sesión</h1><br>
           <span>Ingresa tus datos</span>
-          <input type="email" placeholder="Email" [(ngModel)]="email" name="email" />
-          <input type="password" placeholder="Password" [(ngModel)]="password" name="password" />
+          <input type="email" placeholder="Email" [(ngModel)]="usuario.email" name="email" />
+          <input type="password" placeholder="Password" [(ngModel)]="usuario.password" name="password" />
           <!-- <a href="#">Forgot your password?</a> -->
           <button type="submit">Iniciar Sesión</button>
       </form>
