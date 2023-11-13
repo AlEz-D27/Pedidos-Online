@@ -7,9 +7,9 @@ import { MenuComponent } from './menu/menu.component';
 import { AgregarProductosComponent } from './agregar-productos/agregar-productos.component';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent },
+  // { path: '', component: LoginComponent },
   { path: 'menu', component: MenuComponent },
-  { path: '', component: LoginComponent }, // Set the root path to the LoginComponent
+  { path: 'login', component: LoginComponent }, // Set the root path to the LoginComponent
   { path: 'app', component: AppComponent },
   {path:"productos", component:AgregarProductosComponent},
   {path:"", redirectTo:"/productos", pathMatch:"full"}

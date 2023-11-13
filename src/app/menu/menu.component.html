@@ -4,7 +4,7 @@
             <div class="four columns" >
                 <img src="assets/img/logo01.jpg" width="201" height="50" id="logo">
             </div>
-            <div class="two columns u-pull-right" >
+            <div *ngIf="userRole === 'Cliente'" id="pedidos-carrito" class="two columns u-pull-right" >
                 <ul>
                     <li class="submenu">
                             <img src="assets/img/cart.png" width="35" height="35" id="img-carrito">
@@ -30,6 +30,9 @@
                     </li>
                 </ul>
             </div>
+            <div class="iniciarSesion">
+                <button (click)="onIniciarSesionClick()">Iniciar Sesión</button>
+            </div>
         </div> 
     </div>
 </header>
@@ -40,8 +43,33 @@
 
 <div  class="container">
     <h1 id="encabezado" class="encabezado">Pedidos en Línea</h1>
+
+    <button *ngIf="userRole === 'Cliente'" (click)="toggleVista()">
+        {{ mostrarHistorialPedidos ? 'Mostrar Menú' : 'Mostrar Historial de Pedidos' }}
+      </button>
+
+    <table *ngIf="mostrarHistorialPedidos" class="table table-responsive table-striped">
+        <thead>
+          <tr>
+            <th>ID Orden</th>
+            <th>Total</th>
+            <th>Fecha</th>
+            <th>Dirección</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr> <!-- *ngFor="let order of orderHistory" -->
+            <td> order.id_orden </td>
+            <td> order.total </td>
+            <td> order.fecha </td>
+            <td> order.direccion </td>
+            <td> <a href="">Detalles</a> </td>
+          </tr>
+        </tbody>
+      </table>
+
     <div class="row">
-        <div class="four columns">
+        <div *ngIf="userRole === 'Administrador'" id="agregar-productos" class="four columns">
                 <div class="card">
                     <form #miFormulario="ngForm" class="container" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
                         <h4>Ingresar imagen:</h4>
@@ -56,10 +84,10 @@
                             
                         </div>
                     </form>
-                </div> <!--.card-->
+                </div>
         </div>
 
-        <div id="lista-combos" class="container" style="margin-top: 30px;">
+        <div *ngIf="!mostrarHistorialPedidos" id="lista-combos" class="container" style="margin-top: 30px;">
             <div class="row">
                 <ng-container *ngFor="let producto of productos">
                     <div class="four columns">
@@ -70,7 +98,7 @@
                             <div class="info-card">
                                 <h4>{{producto.nombreProducto}}</h4><br>
                                 <p class="precio">20000 Gs <span class="u-pull-right ">{{producto.precioProducto}}</span></p>
-                                <a href="#" class="u-full-width button-primary button input agregar-carrito" data-id="{{producto.idProducto}}">Agregar Al Carrito</a>
+                                <a *ngIf="userRole === 'Cliente'" href="#" class="u-full-width button-primary button input agregar-carrito" data-id="{{producto.idProducto}}">Agregar Al Carrito</a>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -8,6 +9,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class LoginComponent {
   isRightPanelActive: boolean = false;
 
+  constructor(private authService: AuthService) {}
+
   onSignInClick(): void {
     this.isRightPanelActive = false;
     this.onSubmit;
@@ -15,7 +18,7 @@ export class LoginComponent {
 
   onSignUpClick(): void {
     this.isRightPanelActive = true;
-    this.onSubmit
+    this.onSubmit;
   }
 
   @Output() status: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -30,7 +33,9 @@ export class LoginComponent {
   onSubmit(): void {
     // You can handle the login logic here
     if (this.isRightPanelActive) {
+      console.log('Rol:', this.rol);
       console.log('Directly entering the menu');
+      this.authService.setUserRole(this.rol);
       this.status.emit(true); // Emit true when login panel is active
     } else {
       if (this.email === 'admin@gmail.com' && this.password === '1234') {

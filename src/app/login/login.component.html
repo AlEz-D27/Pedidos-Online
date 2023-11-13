@@ -7,11 +7,11 @@
 			<input type="text" placeholder="Apellido" [(ngModel)]="apellido" name="apellido" />
 			<input type="text" placeholder="Edad" [(ngModel)]="edad" name="edad" />
       <!-- <span>Rol:</span> -->
-        <select [(ngModel)]="rol" id="Rol">
-          <option>Seleccione rol</option>
-          <option>Cliente</option>
-          <option>Administrador</option>
-        </select>
+      <select [(ngModel)]="rol" id="Rol" name="rol">
+        <option>Seleccione rol</option>
+        <option>Cliente</option>
+        <option>Administrador</option>
+      </select>
 			<input type="email" placeholder="Email" [(ngModel)]="email" name="email" />
       <input type="password" placeholder="Password" [(ngModel)]="password" name="password" />
 			<button type="submit">Registrarse</button>

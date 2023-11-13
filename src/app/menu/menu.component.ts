@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Producto } from 'src/app/producto';
+import { Ordenes } from './ordenes';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ProductoService } from '../producto.service';
+import { AuthService } from '../auth.service';
 import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -13,10 +16,16 @@ export class MenuComponent implements OnInit {
   
   constructor(
     public sanitizer: DomSanitizer,
-    public productoServicio: ProductoService) {}
+    public productoServicio: ProductoService,
+    private router: Router,
+    private authService: AuthService ) {}
+
+
+  mostrarHistorialPedidos: boolean = false;  
 
   imagenUrl: SafeResourceUrl | null;
   
+  userRole: string = '';
   carrito: any;
   contenedorCarrito: any;
   vaciarCarritoBtn: any;
@@ -29,17 +38,33 @@ export class MenuComponent implements OnInit {
   imagenes: SafeResourceUrl[] = [];
   file : any;
   url ?: string;
+
+
+  toggleVista(): void {
+    this.mostrarHistorialPedidos = !this.mostrarHistorialPedidos;
+    // Aquí puedes realizar otras acciones necesarias al cambiar la vista
+  }
+
   @ViewChild('miFormulario') miFormulario: NgForm;
   ngOnInit() {
+    this.userRole = this.authService.getUserRole();
+    console.log('User Role:', this.userRole);
+    
     this.carrito = document.querySelector('#carrito');
     this.contenedorCarrito = document.querySelector('#lista-carrito tbody');
     this.vaciarCarritoBtn = document.querySelector('#vaciar-carrito');
     this.listarCombos = document.querySelector('#lista-combos');
     this.confirmarPedidoBtn = document.querySelector('#confirmar-pedido');
-  
+
     this.cargarEventListeners();
     this.obtenerProductos();
   }
+
+  onIniciarSesionClick() {
+    // Use the Router to navigate to the login component
+    this.router.navigate(['/login']);  // Replace 'login' with the actual route path for your login component
+  }
+
   /*
     Aqui creamos la funcion onSubmit
   */
