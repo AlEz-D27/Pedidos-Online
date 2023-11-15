@@ -60,7 +60,7 @@ export class MenuComponent implements OnInit {
     this.obtenerProductos();
   }
 
-  onIniciarSesionClick() {
+  onCerrarSesionClick() {
     // Use the Router to navigate to the login component
     this.router.navigate(['/login']);  // Replace 'login' with the actual route path for your login component
   }

@@ -4,8 +4,7 @@
             <app-login (status)="updateLoginStatus($event)"></app-login>
         </div>
         <div class="col" *ngIf="isLoggedIn">
-            <!-- Your menu component or other content goes here -->
-            <app-menu></app-menu>
+            <router-outlet></router-outlet> <!-- This is important for displaying routed components -->
         </div>
     </div>
 </div>

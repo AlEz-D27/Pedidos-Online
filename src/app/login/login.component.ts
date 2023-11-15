@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Usuario } from './usuario';
 import { LoginService } from './login.service';
@@ -12,7 +13,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class LoginComponent {
   isRightPanelActive: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   onSignInClick(): void {
     this.isRightPanelActive = false;
@@ -37,6 +38,7 @@ export class LoginComponent {
       if (this.usuario.email === 'admin@gmail.com' && this.usuario.password === '1234') {
         console.log('Login successful');
         this.status.emit(true); // Emit true when login is successful
+        this.router.navigate(['/menu']); // Navigate to MenuComponent after 
       } else {
         console.log('Invalid credentials. Please try again.');
         this.status.emit(false); // Emit false when login fails

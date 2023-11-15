@@ -7,12 +7,11 @@ import { MenuComponent } from './menu/menu.component';
 import { AgregarProductosComponent } from './agregar-productos/agregar-productos.component';
 
 const routes: Routes = [
-  // { path: '', component: LoginComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'menu', component: MenuComponent },
-  { path: 'login', component: LoginComponent }, // Set the root path to the LoginComponent
+  { path: 'productos', redirectTo: '/menu', pathMatch: 'full' }, // Redirect to MenuComponent for /productos
   { path: 'app', component: AppComponent },
-  {path:"productos", component:AgregarProductosComponent},
-  {path:"", redirectTo:"/productos", pathMatch:"full"}
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];
 
 @NgModule({
