@@ -61,8 +61,12 @@ export class MenuComponent implements OnInit {
   }
 
   onCerrarSesionClick() {
-    // Use the Router to navigate to the login component
-    this.router.navigate(['/login']);  // Replace 'login' with the actual route path for your login component
+    const isConfirmed = window.confirm('¿Está seguro de cerrar sesión?');
+
+    // If the user confirms, navigate to the login page
+    if (isConfirmed) {
+      this.router.navigate(['/login']);
+    }
   }
 
   /*
