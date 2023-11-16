@@ -12,24 +12,25 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class LoginComponent {
   isRightPanelActive: boolean = false;
+  
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router,private loginService: LoginService ) {}
 
   onSignInClick(): void {
     this.isRightPanelActive = false;
-    this.onSubmit();
+    this.onSubmit;
   }
 
   onSignUpClick(): void {
     this.isRightPanelActive = true;
-    this.onSubmit();
+    this.onSubmit;
   }
 
   @Output() status: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   usuario : Usuario = new Usuario(); 
   registroRequest : RegistroRequest = new RegistroRequest();
-  private loginService: LoginService;
+  
   onSubmit(): void {
     // You can handle the login logic here
     if (this.isRightPanelActive) {
@@ -45,43 +46,40 @@ export class LoginComponent {
       }
     }
   }
-  registrar(){
-    
-    
-    this.guardarToken(this.registroRequest)
-    const token = localStorage.getItem('token')
-    if (token != null){
-      const helper = new JwtHelperService();
-      const decodedToken = helper.decodeToken(token);
-
-      // Ahora, 'decodedToken' contiene los datos del token decodificado
-      console.log(decodedToken.userId);
-      console.log(decodedToken.userCorreo);
-      console.log(decodedToken.userNombre);
-      console.log(decodedToken.userApellido);
-      console.log(decodedToken.userEdad)
-      console.log('Rol:', this.registroRequest.roles);
-      console.log('Directly entering the menu');
-      this.authService.setUserRole(this.registroRequest.roles);
-      this.status.emit(true); // Emit true when login panel is active
-    }
-    
-  }
-  guardarToken(registroRequest: RegistroRequest){
-    this.loginService.registrar(registroRequest).subscribe(
-      (token: string) => {
+  registrar() {
+    console.log("Este registrar funciona");
+    this.loginService.registrar(this.registroRequest).subscribe({
+      next: (response: any) => {
+        console.log('response', response);
+  
         // Almacena el token en localStorage
-        localStorage.setItem('token', token);
-    
-        // Otras acciones después de registrar (si es necesario)
-      },
-      (error) => {
-        // Maneja el error, si lo hay
-        console.error('Error al registrar:', error);
-      }
-    );
-    
+        localStorage.setItem('token', response.token);
+  
+        // Procesa el token decodificado
+        const helper = new JwtHelperService();
+        const decodedToken = helper.decodeToken(response.token);
+        console.log('Claims del Token:', decodedToken);
+        const token = localStorage.getItem('token');
+        console.log(decodedToken);
 
+        console.log(response.token);
+        console.log(decodedToken.userId);
+        console.log(decodedToken.userCorreo);
+        console.log(decodedToken.userNombre);
+        console.log(decodedToken.userApellido);
+        console.log(decodedToken.userEdad);
+        console.log('Rol:', this.registroRequest.roles);
+        console.log('Directly entering the menu');
+        this.authService.setUserRole(this.registroRequest.roles);
+        this.status.emit(true); // Emit true when login panel is active
+      },
+      error: (error: any) => {
+        console.error('Error al registrar:', error);
+        // Manejar el error, si es necesario
+      }
+    });
   }
+  
+
   
 }

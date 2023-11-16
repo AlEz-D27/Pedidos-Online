@@ -12,14 +12,15 @@ export class LoginService {
   constructor(  
     private http: HttpClient,
   ) { }
-  login(username: string, password: string): Observable<string>{
+  public login(username: string, password: string): Observable<string>{
     const loginRequest: LoginRequest = {
       correo: username,
       password: password
     };
     return this.http.post< string>(`${this.apiUrl}/login`, loginRequest )
   }
-  registrar(registroRequest: RegistroRequest) : Observable<string>{
+  public registrar(registroRequest: RegistroRequest) : Observable<string>{
+    console.log(`${this.apiUrl}/registrar`);
     return this.http.post<string>(`${this.apiUrl}/registrar`, registroRequest)
     
      
