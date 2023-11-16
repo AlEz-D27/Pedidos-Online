@@ -5,6 +5,8 @@ import { Usuario } from './usuario';
 import { LoginService } from './login.service';
 import { RegistroRequest } from './registro-request';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { CookieService } from 'ngx-cookie-service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -14,7 +16,7 @@ export class LoginComponent {
   isRightPanelActive: boolean = false;
   
 
-  constructor(private authService: AuthService, private router: Router,private loginService: LoginService ) {}
+  constructor(private authService: AuthService, private router: Router,private loginService: LoginService, private cookieService : CookieService ) {}
 
   onSignInClick(): void {
     this.isRightPanelActive = false;
@@ -53,7 +55,7 @@ export class LoginComponent {
         console.log('response', response);
   
         // Almacena el token en localStorage
-        localStorage.setItem('token', response.token);
+        this.cookieService.set('token', response.token);
   
         // Procesa el token decodificado
         const helper = new JwtHelperService();

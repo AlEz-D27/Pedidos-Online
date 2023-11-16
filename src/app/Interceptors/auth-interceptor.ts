@@ -6,28 +6,29 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
+  HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  constructor(private cookieService: CookieService, private router: Router ){}
   intercept(
-    request: HttpRequest<any>,
+    request: HttpRequest<unknown>,
     next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  ): Observable<HttpEvent<unknown>> {
     // Obtén el token del almacenamiento local (o donde lo hayas almacenado)
-    const token = localStorage.getItem('tu_token_jwt');
-
-    // Clona la solicitud y agrega el token a las cabeceras
-    if (token) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
+    const token = this.cookieService.get('token')
+    let req = request;
+    if (token){
+      req = request.clone ({
+        setHeaders:{
+          authorization: `bearer ${token}`
+        }
       });
     }
-
-    // Continúa con la siguiente manipulación de solicitudes
-    return next.handle(request);
+    return next.handle(req);
   }
 }
